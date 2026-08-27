@@ -1,0 +1,20 @@
+{
+  "name": "Re7lty",
+  "short_name": "Re7lty",
+  "description": "Premium car rental — Al Omda Office, Egypt",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/brand/re7lety-app-icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

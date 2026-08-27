@@ -1,0 +1,100 @@
+:root {
+  /* Surfaces — iOS archive reference (BGPrimary / Surface*) */
+  --bg-void: #000000;
+  --bg-primary: #080808;
+  --bg-elevated: #202020;
+  --bg-card: #151515;
+  --bg-secondary: #202020;
+  --bg-panel: #1a1a1a;
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #686868;
+  --text-inverse: #050505;
+
+  /* Brand — iOS AccentYango (#E9FF00); re7lety “7” uses same accent */
+  --accent: #e9ff00;
+  --accent-bright: #cfe300;
+  --accent-soft: rgba(233, 255, 0, 0.14);
+  --accent-glow: rgba(233, 255, 0, 0.38);
+  --accent-line: #e9ff00;
+
+  /* Legacy racing red — rare brand marks only */
+  --accent-red: #ff3548;
+
+  /* Status */
+  --success: #3dff8b;
+  --chrome: #c8c8c8;
+
+  /* Lines */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.1);
+  --grid-line: rgba(255, 255, 255, 0.045);
+  --hairline: rgba(255, 255, 255, 0.07);
+
+  /* Type — iOS uses SF; web keeps Manrope/Syne */
+  --font-display: "Syne", "Manrope", system-ui, sans-serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+
+  /* Space */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+
+  /* Radii */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  /* Motion tokens */
+  --motion-instant: 120ms;
+  --motion-fast: 220ms;
+  --motion-normal: 350ms;
+  --motion-cinematic: 650ms;
+  --motion-hero: 850ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --spring-button: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  /* Layout */
+  --site-max: 1200px;
+  --phone-width: 390px;
+  --phone-height: 844px;
+  --safe-top: 54px;
+  --safe-bottom: 34px;
+  --nav-height: 74px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --safe-top: 20px;
+    --safe-bottom: 12px;
+    --nav-height: 64px;
+  }
+}
+
+.native-app {
+  --safe-top: env(safe-area-inset-top, 54px);
+  --safe-bottom: env(safe-area-inset-bottom, 34px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-instant: 1ms;
+    --motion-fast: 1ms;
+    --motion-normal: 120ms;
+    --motion-cinematic: 160ms;
+    --motion-hero: 180ms;
+  }
+}

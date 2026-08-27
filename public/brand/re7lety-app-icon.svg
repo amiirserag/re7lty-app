@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="none">
+  <defs>
+    <linearGradient id="chrome" x1="80" y1="260" x2="80" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="0.5" stop-color="#D9DCE1"/>
+      <stop offset="1" stop-color="#9AA0AA"/>
+    </linearGradient>
+    <linearGradient id="red" x1="500" y1="260" x2="500" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF7A68"/>
+      <stop offset="0.5" stop-color="#FF3548"/>
+      <stop offset="1" stop-color="#C10E27"/>
+    </linearGradient>
+    <radialGradient id="glow-corner" cx="78%" cy="82%" r="70%">
+      <stop stop-color="#FF3548" stop-opacity="0.28"/>
+      <stop offset="55%" stop-color="#FF3548" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#FF3548" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft-glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- base -->
+  <rect width="1024" height="1024" fill="#050505"/>
+  <rect width="1024" height="1024" fill="url(#glow-corner)"/>
+
+  <!-- diagonal accent line -->
+  <line x1="120" y1="810" x2="904" y2="214" stroke="url(#red)" stroke-width="10"
+        stroke-linecap="round" opacity="0.55" filter="url(#soft-glow)"/>
+
+  <!-- R7 monogram, slight racing skew -->
+  <g transform="translate(512 522) skewX(-8) translate(-512 -522)" font-family="Helvetica Neue, Arial, sans-serif" font-weight="800">
+    <text x="180" y="672" font-size="480" fill="url(#chrome)" letter-spacing="-10">R</text>
+    <text x="512" y="672" font-size="480" fill="url(#red)" letter-spacing="-10" filter="url(#soft-glow)">7</text>
+  </g>
+</svg>

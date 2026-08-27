@@ -1,0 +1,12 @@
+---
+description: Always load re7lety handoff — canonical app context and next steps
+alwaysApply: true
+---
+
+# re7lety — session bootstrap
+
+1. Read `/Users/home/Desktop/Re7lety-App-Updated/HANDOFF.md` (or repo-root `HANDOFF.md`) **first**.
+2. This folder is the real app. Ignore throwaway Expo/Blitz scaffolds and do not treat `Projects/Re7lety/my-app` as this codebase.
+3. Brand separation: re7lety ≠ 4X4 Cafe ≠ Lumen Egypt.
+4. Current pending work: `cars` / `bookings` / `favorites` teenybase schema + wire app off `localStorage` (`re7lety.v2`). iPhone still Offline for Xcode.
+5. Before using localhost:8787, verify the listener cwd is this repo (4x4-cafe often occupies 8787).
