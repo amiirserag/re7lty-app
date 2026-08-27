@@ -1462,3 +1462,201 @@
   }
 }
 
+
+/* ===== Recording-era Home (iPhone ScreenRecording Aug 2026) ===== */
+.recording-home {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+.recording-home .pack-car {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  height: 100%;
+}
+.recording-home .pack-car .media-hero,
+.recording-home .pack-car .media-hero img,
+.recording-home .pack-car .media-hero video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+}
+.recording-home > .vignette {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.28) 28%, rgba(0,0,0,0.12) 48%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.94) 100%);
+}
+.recording-home .grid-bg,
+.recording-home .red-flare {
+  z-index: 1;
+  opacity: 0.55;
+}
+.recording-topbar {
+  position: relative;
+  z-index: 5;
+}
+.recording-home-body {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 8px;
+}
+.recording-home .home-title-block h1 {
+  font-size: 32px;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+}
+.recording-home .home-title-block .sub {
+  margin-top: 10px;
+  letter-spacing: 0.28em;
+  color: var(--text-muted);
+}
+.recording-ring-row {
+  display: grid;
+  grid-template-columns: 72px 1fr 72px;
+  align-items: center;
+  gap: 4px;
+  padding: 0 14px;
+  margin-top: 10px;
+}
+.recording-hud {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.88);
+  font-weight: 600;
+}
+.recording-hud.left { align-items: flex-start; text-align: left; }
+.recording-hud.right { align-items: flex-end; text-align: right; }
+.recording-hud span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.recording-hud .hud-tick {
+  display: block;
+  width: 16px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+.recording-hud.right .hud-tick { align-self: flex-end; }
+.recording-gauge {
+  width: 168px;
+  height: 168px;
+  margin: 0 auto;
+  position: relative;
+}
+.recording-gauge svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.recording-gauge .stat-ring-center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+.recording-gauge .stat-ring-value {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.recording-gauge .stat-ring-unit {
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+.recording-meta {
+  text-align: center;
+  margin-top: 8px;
+  z-index: 3;
+}
+.recording-meta .label {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: #fff;
+}
+.recording-meta .sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.recording-home-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  padding: 0 18px calc(var(--nav-height) + 6px);
+}
+.recording-pager {
+  margin: 0 0 10px;
+}
+.recording-pager button span {
+  width: 14px;
+  height: 3px;
+}
+.recording-pager button.on span {
+  width: 22px;
+  background: var(--accent);
+}
+.recording-tour {
+  flex: 1;
+  height: 44px;
+  border-radius: 999px;
+  border: 1.5px solid var(--accent);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+  font-size: 12px;
+}
+.recording-wordmark {
+  text-transform: lowercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+
+/* Recording tab bar — flatter edge-to-edge like iPhone chrome */
+.recording-tabs .bottom-nav {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(64px + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  background: #050505;
+}
+
+/* Detail — recording book strip */
+.recording-detail .ios-detail-title h1 {
+  letter-spacing: 0.12em;
+}
+.recording-detail .recording-limited {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.recording-detail .red-rule {
+  width: 28px;
+  height: 2px;
+  background: var(--accent);
+  margin: 8px 0 10px;
+}

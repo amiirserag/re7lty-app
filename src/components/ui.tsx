@@ -140,10 +140,10 @@ export function StatRing({ value, unit, label, sublabel, progress = 0.78 }: Ring
   );
 }
 
-export function BrandMark({ size = 15 }: { size?: number }) {
+export function BrandMark({ size = 16 }: { size?: number }) {
   return (
-    <div className="brand-wordmark" style={{ fontSize: size }}>
-      Re<span className="seven">7</span>lty
+    <div className="brand-wordmark recording-wordmark" style={{ fontSize: size }}>
+      re<span className="seven">7</span>lty
     </div>
   );
 }

@@ -49,8 +49,8 @@ export function SplashScreen() {
           <span className="r">R</span>
           <span className="seven">7</span>
         </div>
-        <div className="splash-brand tracked">
-          Re<span className="seven">7</span>lty
+        <div className="splash-brand tracked recording-wordmark">
+          re<span className="seven">7</span>lty
         </div>
         <div className="splash-progress under-logo">
           <motion.span

@@ -1,116 +1,198 @@
-import { useMemo, useState } from "react";
-import { Bell, ChevronDown, MapPin, Search, UserRound } from "lucide-react";
-import { FilterRow } from "../components/FilterChip";
-import { IOSCarCard } from "../components/Cards";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, Menu, Search } from "lucide-react";
+import { MediaHero } from "../components/MediaHero";
+import { BrandMark, SecondaryButton, StatusBar, TopIconButton } from "../components/ui";
 import { haptic } from "../core/motion";
-import type { FilterId } from "../data/cars";
 import { useAppState } from "../store/AppState";
 
-const HOME_FILTERS = [
-  "All",
-  "SUV",
-  "Luxury",
-  "Sports",
-  "Executive",
-  "Van",
-  "Electric",
-  "Economy",
-] as const;
-
-/** Home — matches iOS `HomeView` (greeting, search, chips, Popular list). */
+/**
+ * Home — cinematic showcase matching installed iPhone recording
+ * (G-CLASS / gauge / MORE DETAIL / TOUR CAR / dash pagination).
+ * Uses real featuredCars + local fleet media from AppState.
+ */
 export function HomeScreen() {
   const {
-    inventoryForLocation,
-    profile,
-    selectedLocation,
-    favorites,
-    toggleFavorite,
+    featuredCars,
+    showcaseIndex,
+    nextShowcase,
+    prevShowcase,
+    setShowcaseIndex,
     openDetail,
-    setActiveTab,
+    openTour,
     openLocationPicker,
+    setActiveTab,
     t,
   } = useAppState();
 
-  const [category, setCategory] = useState<FilterId>("All");
+  const cars = featuredCars.length > 0 ? featuredCars : [];
+  const car = cars[showcaseIndex] ?? cars[0];
+  if (!car) {
+    return (
+      <div className="tab-view pack-home recording-home">
+        <StatusBar />
+        <p className="ios-empty">No fleet available for this city.</p>
+      </div>
+    );
+  }
 
-  const popularCars = useMemo(() => {
-    let list = inventoryForLocation.filter((car) => {
-      if (category === "All") return car.available;
-      if (category === "7 Seats") return car.available && car.seats >= 7;
-      return car.available && car.category === category;
-    });
-    list = [...list].sort((a, b) => {
-      const aOmda = a.companyId.startsWith("al-omda") ? 0 : 1;
-      const bOmda = b.companyId.startsWith("al-omda") ? 0 : 1;
-      if (aOmda !== bOmda) return aOmda - bOmda;
-      return a.name.localeCompare(b.name);
-    });
-    return list;
-  }, [inventoryForLocation, category]);
-
-  const openSearch = () => {
-    haptic("selection");
-    setActiveTab("explore");
-    requestAnimationFrame(() => document.getElementById("explore-search")?.focus());
-  };
+  const engineFamily =
+    (car.engine.match(/\b(V\d+|I\d+|W\d+|Electric|Hybrid)\b/i)?.[1] || car.engine.split(/\s+/)[0] || "").toUpperCase();
+  const leftStats = [engineFamily, car.engine, `${car.horsepower} HP`];
+  const rightStats = [car.drivetrain, "0-100", car.acceleration];
 
   return (
-    <div className="tab-view ios-home">
-      <div className="ios-home-scroll">
-        <header className="ios-greeting">
-          <div className="ios-avatar" aria-hidden>
-            <UserRound size={22} strokeWidth={1.5} />
-          </div>
-          <div className="ios-greeting-text">
-            <strong>Hello {profile.name.split(" ")[0] || "Amir"}</strong>
-            <button type="button" className="ios-location-btn pressable" onClick={openLocationPicker}>
-              <MapPin size={12} fill="currentColor" />
-              <span>{selectedLocation.city}</span>
-              <ChevronDown size={10} strokeWidth={3} />
-            </button>
-          </div>
-          <button type="button" className="ios-bell pressable" aria-label="Notifications">
-            <Bell size={16} />
-            <span className="ios-bell-dot" />
-          </button>
-        </header>
+    <div className="tab-view pack-home recording-home">
+      <div className="pack-car" aria-hidden>
+        <MediaHero image={car.heroImage} video={car.heroVideo} alt="" />
+      </div>
+      <div className="vignette" />
+      <div className="grid-bg" />
+      <div className="red-flare" />
+      <StatusBar />
 
-        <button type="button" className="ios-search-pill pressable" onClick={openSearch}>
+      <div className="home-topbar recording-topbar">
+        <TopIconButton aria-label="Menu" onClick={openLocationPicker}>
+          <Menu size={16} />
+        </TopIconButton>
+        <BrandMark />
+        <TopIconButton
+          aria-label="Search"
+          onClick={() => {
+            haptic("selection");
+            setActiveTab("explore");
+          }}
+        >
           <Search size={16} />
-          <span>Type here to search</span>
-        </button>
+        </TopIconButton>
+      </div>
 
-        <FilterRow
-          filters={HOME_FILTERS}
-          active={category}
-          onChange={setCategory}
-          getLabel={(f) => (f === "All" ? "All" : t(`filter.${f}` as Parameters<typeof t>[0]))}
-        />
-
-        <div className="ios-popular-head">
-          <div>
-            <h2>Popular</h2>
-            <p>{popularCars.length} cars available</p>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={car.id}
+          className="recording-home-body"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="home-title-block">
+            <h1>{car.name}</h1>
+            <div className="red-rule center" />
+            <div className="sub">{(car.badge ?? t("common.limitedEdition")).toUpperCase()}</div>
           </div>
-          <button type="button" className="ios-see-all pressable" onClick={openSearch}>
-            See All
-          </button>
-        </div>
 
-        <div className="ios-car-list">
-          {popularCars.length === 0 ? (
-            <p className="ios-empty">No cars found. Try another city or category.</p>
-          ) : (
-            popularCars.map((car) => (
-              <IOSCarCard
-                key={car.id}
-                car={car}
-                favorited={favorites.includes(car.id)}
-                onOpen={() => openDetail(car.id)}
-                onToggleFavorite={() => toggleFavorite(car.id)}
-              />
-            ))
-          )}
+          <div className="pack-ring-row recording-ring-row">
+            <div className="hud-col left recording-hud">
+              {leftStats.map((row) => (
+                <span key={row}>
+                  <i className="hud-tick" />
+                  {row}
+                </span>
+              ))}
+            </div>
+
+            <div className="home-ring-wrap">
+              <div className="stat-ring recording-gauge">
+                <svg viewBox="0 0 168 168" aria-hidden>
+                  <circle
+                    cx="84"
+                    cy="84"
+                    r="78"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.12)"
+                    strokeWidth="2.5"
+                    strokeDasharray={`${2 * Math.PI * 78 * 0.78} ${2 * Math.PI * 78}`}
+                    strokeLinecap="round"
+                    transform="rotate(-90 84 84)"
+                  />
+                  <circle
+                    cx="84"
+                    cy="84"
+                    r="78"
+                    fill="none"
+                    stroke="var(--accent)"
+                    strokeWidth="2.5"
+                    strokeDasharray={`${2 * Math.PI * 78 * Math.min(0.92, car.topSpeed / 320)} ${2 * Math.PI * 78}`}
+                    strokeLinecap="round"
+                    transform="rotate(-90 84 84)"
+                    style={{ filter: "drop-shadow(0 0 8px var(--accent-glow))" }}
+                  />
+                </svg>
+                <div className="stat-ring-center">
+                  <div className="stat-ring-value">{car.topSpeed}</div>
+                  <div className="stat-ring-unit">KM/H</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="hud-col right recording-hud">
+              {rightStats.map((row) => (
+                <span key={row}>
+                  <i className="hud-tick" />
+                  {row}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="recording-meta">
+            <div className="label">{t("common.topSpeed").toUpperCase()}</div>
+            <div className="sub">{car.performanceLabel}</div>
+          </div>
+
+          <div className="pack-more">
+            <SecondaryButton onClick={() => openDetail(car.id)}>
+              {t("home.moreDetail").toUpperCase()}
+            </SecondaryButton>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      <div className="pack-home-footer with-tab-pad recording-home-footer">
+        <div className="pager recording-pager" role="tablist" aria-label="Fleet">
+          {cars.map((c, i) => (
+            <button
+              key={c.id}
+              type="button"
+              className={i === showcaseIndex ? "on" : ""}
+              aria-label={c.name}
+              onClick={() => {
+                haptic("selection");
+                setShowcaseIndex(i);
+              }}
+            >
+              <span />
+            </button>
+          ))}
+        </div>
+        <div className="pack-tour-row">
+          <TopIconButton
+            aria-label="Previous"
+            variant="accent"
+            onClick={() => {
+              haptic("selection");
+              prevShowcase();
+            }}
+          >
+            <ChevronLeft size={18} />
+          </TopIconButton>
+          <button
+            type="button"
+            className="cta-primary pressable recording-tour"
+            onClick={() => openTour(car.id)}
+          >
+            {t("home.tourCar").toUpperCase()}
+          </button>
+          <TopIconButton
+            aria-label="Next"
+            variant="accent"
+            onClick={() => {
+              haptic("selection");
+              nextShowcase();
+            }}
+          >
+            <ChevronRight size={18} />
+          </TopIconButton>
         </div>
       </div>
     </div>

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import {
   ArrowLeft,
-  Calendar,
   Fuel,
   Gauge,
   Heart,
   Settings2,
+  Share,
   Star,
   Users,
   Waypoints,
@@ -15,7 +15,7 @@ import { formatPrice } from "../data/cars";
 import { haptic } from "../core/motion";
 import { useAppState } from "../store/AppState";
 
-/** Detail — matches iOS `CarDetailView` (hero, 6-spec grid, sticky Book Now). */
+/** Detail — recording-era layout (LIMITED EDITION, specs, BOOK NOW). */
 export function CarDetailScreen() {
   const {
     selectedCarId,
@@ -34,27 +34,38 @@ export function CarDetailScreen() {
   const liked = favorites.includes(car.id);
   const photos = car.gallery.length > 0 ? car.gallery : [car.heroImage, car.detailImage].filter(Boolean);
   const specs = [
-    { Icon: Gauge, label: "Max Speed", value: `${car.topSpeed} ${car.topSpeedUnit}` },
-    { Icon: Settings2, label: "Engine", value: car.engine.split(" ").slice(0, 2).join(" ") },
-    { Icon: Users, label: "Seats", value: `${car.seats} Seats` },
-    { Icon: Settings2, label: "Transmission", value: car.transmission },
-    { Icon: Fuel, label: "Fuel Type", value: car.fuel },
-    { Icon: Waypoints, label: "Drivetrain", value: car.drivetrain },
+    { Icon: Gauge, label: "TOP SPEED", value: `${car.topSpeed} Km/h` },
+    { Icon: Settings2, label: "ENGINE", value: car.engine },
+    { Icon: Waypoints, label: "DRIVETRAIN", value: car.drivetrain },
+    { Icon: Gauge, label: "0-100 KM/H", value: car.acceleration },
+    { Icon: Users, label: "SEATS", value: `${car.seats}` },
+    { Icon: Fuel, label: "FUEL", value: car.fuel },
   ];
 
   return (
-    <div className="screen ios-detail">
+    <div className="screen ios-detail recording-detail">
       <div className="ios-detail-scroll">
         <header className="ios-detail-head">
           <TopIconButton aria-label="Back" onClick={goBack}>
             <ArrowLeft size={16} />
           </TopIconButton>
-          <span className="ios-wordmark" aria-label="re7lety">
-            re<span>7</span>lety
+          <span className="ios-wordmark recording-wordmark" aria-label="re7lty">
+            re<span>7</span>lty
           </span>
-          <TopIconButton aria-label="Book" onClick={() => openBooking(car.id)}>
-            <Calendar size={16} />
-          </TopIconButton>
+          <div style={{ display: "flex", gap: 8 }}>
+            <TopIconButton
+              aria-label="Favorite"
+              onClick={() => {
+                haptic("light");
+                toggleFavorite(car.id);
+              }}
+            >
+              <Heart size={16} fill={liked ? "currentColor" : "none"} />
+            </TopIconButton>
+            <TopIconButton aria-label="Share">
+              <Share size={16} />
+            </TopIconButton>
+          </div>
         </header>
 
         <div className="ios-detail-hero">
@@ -73,32 +84,35 @@ export function CarDetailScreen() {
               ))}
             </div>
           )}
-          <button
-            type="button"
-            className="ios-detail-fav pressable"
-            aria-label="Favorite"
-            onClick={() => {
-              haptic("light");
-              toggleFavorite(car.id);
-            }}
-          >
-            <Heart size={18} fill={liked ? "currentColor" : "none"} />
-          </button>
         </div>
 
         <div className="ios-detail-title">
+          <div className="recording-limited">{(car.badge ?? t("common.limitedEdition")).toUpperCase()}</div>
+          <div className="red-rule" />
           <h1>{car.name}</h1>
-          {car.reviews > 0 && (
-            <span className="ios-detail-rating">
-              <Star size={14} fill="currentColor" /> {car.rating.toFixed(1)}
-            </span>
-          )}
+          <div className="ios-rent-row" style={{ marginTop: 10 }}>
+            <div>
+              {car.priceType === "on_request" ? (
+                <strong>Contact office</strong>
+              ) : (
+                <>
+                  <strong>{formatPrice(car.pricePerDay)}</strong>
+                  <span style={{ color: "var(--accent)" }}> / DAY</span>
+                </>
+              )}
+            </div>
+            {car.reviews > 0 && (
+              <span className="ios-detail-rating">
+                <Star size={14} fill="currentColor" /> {car.rating.toFixed(1)} ({car.reviews})
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="ios-spec-grid">
           {specs.map(({ Icon, label, value }) => (
             <div key={label} className="ios-spec-cell">
-              <div className="ios-spec-icon">
+              <div className="ios-spec-icon" style={{ color: "var(--accent)" }}>
                 <Icon size={17} strokeWidth={1.8} />
               </div>
               <span className="lab">{label}</span>
@@ -107,38 +121,20 @@ export function CarDetailScreen() {
           ))}
         </div>
 
-        <div className="ios-rent-row">
-          <span>Rent Price</span>
-          <div>
-            {car.priceType === "on_request" ? (
-              <strong>Contact office</strong>
-            ) : (
-              <>
-                <strong>{formatPrice(car.pricePerDay)}</strong>
-                <span>/ 1 Day</span>
-              </>
-            )}
-          </div>
-        </div>
-
         <p className="ios-detail-desc">{car.description}</p>
       </div>
 
       <div className="ios-booking-bar">
-        <div className="ios-booking-price">
-          <small>RENT PRICE</small>
-          <strong>
-            {car.priceType === "on_request" ? "Price on request" : formatPrice(car.pricePerDay)}
-          </strong>
-        </div>
         <PrimaryCTA
           fullWidth
-          solid
           className="ios-book-cta"
-          onClick={() => openBooking(car.id)}
+          onClick={() => {
+            haptic("light");
+            openBooking(car.id);
+          }}
           disabled={car.priceType === "on_request"}
         >
-          {car.priceType === "on_request" ? "Contact office for pricing" : t("detail.bookNow")}
+          {car.priceType === "on_request" ? "CONTACT OFFICE" : "BOOK NOW"}
         </PrimaryCTA>
       </div>
     </div>

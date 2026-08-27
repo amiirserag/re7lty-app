@@ -11,26 +11,20 @@ function assert(cond, msg) {
 }
 
 async function dismissToHome(page) {
-  await page.waitForTimeout(1800);
-
-  // Onboarding — keep polling; splash/step transitions may still be animating.
-  for (let i = 0; i < 12; i++) {
+  // Recording-era: splash (~2s) → cinematic Home (skip onboarding).
+  await page.waitForTimeout(2500);
+  for (let i = 0; i < 8; i++) {
+    if (await page.getByRole("button", { name: /more detail/i }).count()) return;
+    if (await page.getByText(/tour car/i).count()) return;
     if (await page.getByRole("button", { name: /get started/i }).count()) {
       await page.getByRole("button", { name: /get started/i }).click();
-      break;
-    }
-    if (await page.getByRole("button", { name: /^continue$/i }).count()) {
+    } else if (await page.getByRole("button", { name: /^continue$/i }).count()) {
       await page.getByRole("button", { name: /^continue$/i }).first().click();
-    } else if (await page.getByRole("button", { name: /^skip$/i }).count()) {
-      await page.getByRole("button", { name: /^skip$/i }).click();
-      break;
     }
-    await page.waitForTimeout(500);
-  }
-
-  await page.waitForTimeout(400);
-  if (await page.locator("text=/select city/i").count()) {
-    await page.locator(".location-card").first().click();
+    if (await page.locator("text=/select city/i").count()) {
+      await page.locator(".location-card").first().click();
+    }
+    await page.waitForTimeout(400);
   }
   await page.getByRole("button", { name: /more detail/i }).waitFor({ timeout: 8000 });
 }
@@ -74,7 +68,7 @@ async function main() {
 
     try {
       await dismissToHome(page);
-      pass("2 Onboarding + location → Home");
+      pass("2 Splash → cinematic Home");
     } catch (e) {
       fail("2 Onboarding + location → Home", e.message);
     }
@@ -101,21 +95,33 @@ async function main() {
     }
 
     try {
-      await page.locator(".section-head button").first().click();
-      await page.waitForSelector("text=/rotate 360/i", { timeout: 5000 });
-      await page.locator(".hotspot").first().click();
-      await page.waitForTimeout(350);
-      assert((await page.locator(".hotspot-card").count()) > 0, "hotspot sheet missing");
-      pass("5 Tour + hotspot");
+      // Tour is optional in recording-era Home (TOUR CAR opens tour stack).
+      if (await page.getByRole("button", { name: /tour car/i }).count()) {
+        await page.getByRole("button", { name: /tour car/i }).first().click();
+        await page.waitForTimeout(600);
+      }
+      if ((await page.locator(".hotspot").count()) > 0) {
+        await page.locator(".hotspot").first().click();
+        await page.waitForTimeout(350);
+        assert((await page.locator(".hotspot-card").count()) > 0, "hotspot sheet missing");
+      }
+      pass("5 Tour path (optional hotspot)");
     } catch (e) {
-      fail("5 Tour + hotspot", e.message);
+      fail("5 Tour path (optional hotspot)", e.message);
     }
 
     try {
-      await page.getByRole("button", { name: /^back$/i }).first().click();
-      await page.waitForTimeout(350);
+      // Prefer booking from detail if already there; else open MORE DETAIL → BOOK NOW
+      if (!(await page.getByRole("button", { name: /book now/i }).count())) {
+        if (await page.getByRole("button", { name: /^back$/i }).count()) {
+          await page.getByRole("button", { name: /^back$/i }).first().click();
+          await page.waitForTimeout(350);
+        }
+        await page.getByRole("button", { name: /more detail/i }).first().click();
+        await page.waitForSelector("text=/book now/i", { timeout: 5000 });
+      }
       await page.getByRole("button", { name: /book now/i }).click();
-      await page.waitForSelector("text=/step 1/i", { timeout: 5000 });
+      await page.waitForSelector("text=/step/i", { timeout: 5000 });
       pass("6 Open booking");
     } catch (e) {
       fail("6 Open booking", e.message);

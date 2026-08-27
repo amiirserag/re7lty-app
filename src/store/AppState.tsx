@@ -410,11 +410,18 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setScreen("main");
   }, []);
 
+  /** Recording-era flow: splash → cinematic Home (skip yellow onboarding). */
   const completeSplash = useCallback(() => {
-    if (!onboardingDone) setScreen("onboarding");
-    else if (!saved.selectedLocationId && !selectedLocationId) setScreen("location");
-    else setScreen("main");
-  }, [onboardingDone, saved.selectedLocationId, selectedLocationId]);
+    setOnboardingDone(true);
+    if (!saved.selectedLocationId && !selectedLocationId) {
+      setSelectedLocationId("cairo");
+      const loc = LOCATIONS.find((l) => l.id === "cairo");
+      if (loc) setProfile((p) => ({ ...p, city: loc.city }));
+    }
+    setHistory([]);
+    setActiveTab("home");
+    setScreen("main");
+  }, [saved.selectedLocationId, selectedLocationId]);
 
   const completeOnboarding = useCallback(() => {
     setOnboardingDone(true);

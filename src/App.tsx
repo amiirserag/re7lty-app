@@ -26,7 +26,7 @@ import "./screens/screens.css";
 function MainTabs() {
   const { activeTab, setActiveTab } = useAppState();
   return (
-    <div className="tab-shell">
+    <div className="tab-shell recording-tabs">
       <div className="tab-panel">
         {activeTab === "home" && <HomeScreen />}
         {activeTab === "explore" && <ExploreScreen />}
