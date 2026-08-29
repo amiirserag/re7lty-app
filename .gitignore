@@ -34,11 +34,11 @@ ios/App/Pods
 *.sln
 *.sw?
 
-# teenybase
+# teenybase (D1 migrations dir at repo root — not supabase/migrations)
 .local-persist
 .teeny
 .tmp.*.json
 .dev.vars
 .prod.vars
-migrations
+/migrations
 supabase/.temp
