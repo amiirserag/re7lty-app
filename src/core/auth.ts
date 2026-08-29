@@ -70,6 +70,12 @@ export interface AuthProvider {
   onAuthChange?(cb: (user: AuthUser | null) => void): () => void;
   /** Best-effort, non-blocking upload of app state. No-op in local mode. */
   syncUp?(user: AuthUser, payload: SyncPayload): Promise<void>;
+  /**
+   * Best-effort download of previously-synced app state for this user, used
+   * once per sign-in to repopulate a fresh device/reinstall. Returns null on
+   * failure or when there is nothing to merge. No-op in local mode.
+   */
+  fetchDown?(user: AuthUser): Promise<Partial<SyncPayload> | null>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -311,6 +317,11 @@ export class SupabaseAuthProvider implements AuthProvider {
             renter_name: b.renterName,
             renter_phone: b.renterPhone,
             renter_email: b.renterEmail,
+            subtotal: b.subtotal,
+            delivery_fee: b.deliveryFee,
+            service_fee: b.serviceFee,
+            discount: b.discount,
+            deposit: b.deposit,
             total: b.total,
             created_at: b.createdAt,
           })),
@@ -319,6 +330,57 @@ export class SupabaseAuthProvider implements AuthProvider {
       ]);
     } catch {
       // Best-effort by design: localStorage remains the source of truth.
+    }
+  }
+
+  /** See supabase/schema.sql for the tables this reads from. */
+  async fetchDown(user: AuthUser): Promise<Partial<SyncPayload> | null> {
+    try {
+      const [profileRes, favoritesRes, bookingsRes] = await Promise.all([
+        this.client.from("profiles").select("*").eq("user_id", user.id).maybeSingle(),
+        this.client.from("favorites").select("car_id").eq("user_id", user.id),
+        this.client.from("bookings").select("*").eq("user_id", user.id),
+      ]);
+
+      const profile = profileRes.data
+        ? {
+            name: (profileRes.data.name as string) ?? "",
+            email: (profileRes.data.email as string) ?? "",
+            phone: (profileRes.data.phone as string) ?? "",
+            city: (profileRes.data.city as string) ?? "",
+            memberSince: (profileRes.data.member_since as string) ?? "",
+            membership: (profileRes.data.membership as string) ?? "",
+          }
+        : undefined;
+
+      const favorites = favoritesRes.data?.map((r) => r.car_id as string);
+
+      const bookings: Booking[] | undefined = bookingsRes.data?.map((b) => ({
+        id: b.id as string,
+        reference: b.reference as string,
+        carId: b.car_id as string,
+        status: b.status as Booking["status"],
+        pickupLocation: (b.pickup_location as string) ?? "",
+        returnLocation: (b.return_location as string) ?? "",
+        deliveryRequested: Boolean(b.delivery_requested),
+        deliveryAddress: (b.delivery_address as string) || undefined,
+        startDate: b.start_date as string,
+        endDate: b.end_date as string,
+        renterName: (b.renter_name as string) ?? "",
+        renterPhone: (b.renter_phone as string) ?? "",
+        renterEmail: (b.renter_email as string) ?? "",
+        subtotal: (b.subtotal as number) ?? 0,
+        deliveryFee: (b.delivery_fee as number) ?? 0,
+        serviceFee: (b.service_fee as number) ?? 0,
+        discount: (b.discount as number) ?? 0,
+        deposit: (b.deposit as number) ?? 0,
+        total: (b.total as number) ?? 0,
+        createdAt: b.created_at as string,
+      }));
+
+      return { profile, favorites, bookings };
+    } catch {
+      return null;
     }
   }
 }

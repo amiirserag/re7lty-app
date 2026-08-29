@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -328,6 +329,40 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     if (!user || !authProvider.syncUp) return;
     void authProvider.syncUp(user, { bookings, favorites, profile });
   }, [user, bookings, favorites, profile]);
+
+  // Once per sign-in: pull down anything synced from another device/install
+  // and merge it into local state (a fresh device/reinstall otherwise starts
+  // empty even though the account has cloud data). Local rows win on id
+  // conflicts; remote-only rows are added.
+  const fetchedDownForUserId = useRef<string | null>(null);
+  useEffect(() => {
+    if (!user || !authProvider.fetchDown) return;
+    if (fetchedDownForUserId.current === user.id) return;
+    fetchedDownForUserId.current = user.id;
+    void authProvider.fetchDown(user).then((remote) => {
+      if (!remote) return;
+      if (remote.favorites?.length) {
+        setFavorites((prev) => Array.from(new Set([...prev, ...remote.favorites!])));
+      }
+      if (remote.bookings?.length) {
+        setBookings((prev) => {
+          const knownIds = new Set(prev.map((b) => b.id));
+          const remoteOnly = remote.bookings!.filter((b) => !knownIds.has(b.id));
+          return remoteOnly.length ? [...prev, ...remoteOnly] : prev;
+        });
+      }
+      if (remote.profile) {
+        setProfile((prev) => ({
+          name: prev.name || remote.profile!.name,
+          email: prev.email || remote.profile!.email,
+          phone: prev.phone || remote.profile!.phone,
+          city: prev.city || remote.profile!.city,
+          memberSince: prev.memberSince || remote.profile!.memberSince,
+          membership: prev.membership || remote.profile!.membership,
+        }));
+      }
+    });
+  }, [user]);
 
   const t = useMemo(() => makeT(language), [language]);
 

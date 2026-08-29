@@ -1,7 +1,17 @@
 -- Re7lety — Supabase schema
 -- Paste this into the SQL editor of your Supabase project.
 -- Users themselves are managed by Supabase Auth (auth.users); these tables
--- hold the app data that the client syncs up when a user is signed in.
+-- hold the app data that the client syncs up (and pulls back down on a
+-- fresh sign-in) when a user is signed in.
+--
+-- If `public.bookings` already exists from an earlier version of this file
+-- (before subtotal/delivery_fee/service_fee/discount/deposit existed), run:
+--   alter table public.bookings
+--     add column if not exists subtotal integer not null default 0,
+--     add column if not exists delivery_fee integer not null default 0,
+--     add column if not exists service_fee integer not null default 0,
+--     add column if not exists discount integer not null default 0,
+--     add column if not exists deposit integer not null default 0;
 
 -- ---------------------------------------------------------------
 -- profiles: one row per user, mirrors the in-app profile
@@ -65,6 +75,11 @@ create table if not exists public.bookings (
   renter_name        text not null default '',
   renter_phone       text not null default '',
   renter_email       text not null default '',
+  subtotal           integer not null default 0,
+  delivery_fee       integer not null default 0,
+  service_fee        integer not null default 0,
+  discount           integer not null default 0,
+  deposit            integer not null default 0,
   total              integer not null default 0,
   created_at         date not null,
   synced_at          timestamptz not null default now()
