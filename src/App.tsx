@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { Analytics } from "@vercel/analytics/react";
 import { MouseCursor } from "./components/MouseCursor";
 import { BottomNav } from "./components/BottomNav";
 import { BookingFlowScreen } from "./screens/BookingFlowScreen";
@@ -78,6 +79,7 @@ export default function App() {
         <RootNavigator />
       </div>
     </div>
+      <Analytics />
     </AppStateProvider>
   );
 }
