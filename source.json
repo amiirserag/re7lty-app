@@ -1,0 +1,43 @@
+{
+  "name": "Re7lty",
+  "subtitle": "Al Omda premium fleet — Egypt",
+  "description": "Install Re7lty on your iPhone. Premium car rental across Cairo, Giza, Alexandria, and Egypt.",
+  "iconURL": "https://re7lety.pages.dev/brand/re7lety-app-icon.png",
+  "headerURL": "ffbedeqmjuiyrhdxfhyt",
+  "website": "https://re7lety.pages.dev",
+  "tintColor": "#FF3548",
+  "featuredApps": [
+    "app.re7lety.ios"
+  ],
+  "apps": [
+    {
+      "name": "Re7lty",
+      "bundleIdentifier": "app.re7lety.ios",
+      "developerName": "Amir Serag",
+      "subtitle": "Premium car rental",
+      "localizedDescription": "Browse Al Omda's curated fleet, explore vehicles in 360°, and book premium rentals across Egypt — Cairo, Giza, Alexandria, North Coast, Luxor, and Aswan.",
+      "iconURL": "https://re7lety.pages.dev/brand/re7lety-app-icon.png",
+      "tintColor": "#FF3548",
+      "screenshots": {
+        "iphone": [
+          "https://re7lety.pages.dev/brand/re7lety-app-icon.png"
+        ]
+      },
+      "versions": [
+        {
+          "version": "1.0",
+          "buildVersion": "1",
+          "date": "2026-08-30T01:56:00Z",
+          "downloadURL": "https://github.com/amiirserag/re7lty-app/releases/download/ios-1.0.0/Re7lty-1.0.ipa",
+          "size": 44712715,
+          "minOSVersion": "14.0",
+          "localizedDescription": "Initial AltStore release — recording-era cinematic UI, full fleet, bookings."
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {}
+      }
+    }
+  ]
+}
