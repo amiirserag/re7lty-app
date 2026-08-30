@@ -1,13 +1,13 @@
 {
-  "name": "Re7lty",
-  "subtitle": "Al Omda premium fleet — Egypt",
-  "description": "Install Re7lty on your iPhone. Premium car rental across Cairo, Giza, Alexandria, and Egypt.",
+  "name": "Amir Apps",
+  "subtitle": "Re7lty fleet & Triple 7 Dubai loyalty",
+  "description": "Install Re7lty and Triple 7 Dubai on your iPhone. Premium car rental in Egypt and loyalty rewards in Dubai.",
   "iconURL": "https://re7lety.pages.dev/brand/re7lety-app-icon.png",
-  "headerURL": "ffbedeqmjuiyrhdxfhyt",
   "website": "https://re7lety.pages.dev",
   "tintColor": "#FF3548",
   "featuredApps": [
-    "app.re7lety.ios"
+    "app.re7lety.ios",
+    "com.amiirserag.triple7"
   ],
   "apps": [
     {
@@ -15,7 +15,7 @@
       "bundleIdentifier": "app.re7lety.ios",
       "developerName": "Amir Serag",
       "subtitle": "Premium car rental",
-      "localizedDescription": "Browse Al Omda's curated fleet, explore vehicles in 360°, and book premium rentals across Egypt — Cairo, Giza, Alexandria, North Coast, Luxor, and Aswan.",
+      "localizedDescription": "Browse Al Omda's curated fleet, explore vehicles in 360\u00b0, and book premium rentals across Egypt \u2014 Cairo, Giza, Alexandria, North Coast, Luxor, and Aswan.",
       "iconURL": "https://re7lety.pages.dev/brand/re7lety-app-icon.png",
       "tintColor": "#FF3548",
       "screenshots": {
@@ -28,10 +28,39 @@
           "version": "1.0",
           "buildVersion": "1",
           "date": "2026-08-30T01:56:00Z",
+          "localizedDescription": "Initial AltStore release \u2014 recording-era cinematic UI, full fleet, bookings.",
           "downloadURL": "https://github.com/amiirserag/re7lty-app/releases/download/ios-1.0.0/Re7lty-1.0.ipa",
           "size": 44712715,
-          "minOSVersion": "14.0",
-          "localizedDescription": "Initial AltStore release — recording-era cinematic UI, full fleet, bookings."
+          "minOSVersion": "15.0"
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {}
+      }
+    },
+    {
+      "name": "Triple 7 Dubai",
+      "bundleIdentifier": "com.amiirserag.triple7",
+      "developerName": "Amir Serag",
+      "subtitle": "Loyalty & rewards",
+      "localizedDescription": "Triple 7 Dubai loyalty app \u2014 earn rewards, track benefits, and stay connected with Triple 7 Dubai.",
+      "iconURL": "https://re7lety.pages.dev/brand/triple7-app-icon.png",
+      "tintColor": "#C9A227",
+      "screenshots": {
+        "iphone": [
+          "https://re7lety.pages.dev/brand/triple7-app-icon.png"
+        ]
+      },
+      "versions": [
+        {
+          "version": "1.0.1",
+          "buildVersion": "2",
+          "date": "2026-08-30T02:01:00Z",
+          "localizedDescription": "AltStore sideload build for Triple 7 Dubai loyalty app.",
+          "downloadURL": "https://github.com/amiirserag/re7lty-app/releases/download/triple7-ios-1.0.1/Triple7-1.0.1.ipa",
+          "size": 20717471,
+          "minOSVersion": "17.0"
         }
       ],
       "appPermissions": {
